@@ -5,8 +5,7 @@ const User = require('../models/User');
 
 module.exports.signup = async (req, res, next) => {
   try {
-    const { email, password, name, age, gender, bio ,likedUsers} = req.body;
-
+    const { email, password, name, dateOfBirth, gender} = req.body;
     // Check if user already exists in database
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -19,33 +18,20 @@ module.exports.signup = async (req, res, next) => {
     // Hash password with bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
     // Create new user
-    const user = new User({
+    const user = await User.create({
       email,
       password: hashedPassword,
       name,
-      age,
+      dateOfBirth,
       gender,
-      bio,
-      likedUsers,
+   
     });
-
-    // Save user to database
-    const savedUser = await user.save();
-
-    // Create JWT token
-    const token = jwt.sign(
-      { userId: savedUser._id, email: savedUser.email },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
-    );
-
     // Return success response with token
     res.status(201).json({
        success: true,
         message: 'User successfully created in database',
-        token });
+       });
   } catch (error) {
     next(error);
   }
@@ -69,24 +55,27 @@ module.exports.login = async (req, res, next) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid email or password',
+        error: 'Invalid email or password please try again',
       });
     }
 
     // Create JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      config.JWT_SECRET,
     );
 
     // Return success response with token
     res.status(200).json({
        success: true,
         message: 'User successfully logged in',
-        token });
+        token, user});
   } catch (error) {
     next(error);
   }
 };
+
+
+
+
 
