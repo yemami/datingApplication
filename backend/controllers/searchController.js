@@ -1,28 +1,50 @@
 const User = require('../models/User');
 
-const searchUsers = async (req, res, next) => {
+const getSuggestedMatches = async (req, res, next) => {
   try {
-    const { gender, minAge, maxAge } = req.query;
+    // Get user's location from database
+    const user_id = req.userId;
+    const user = await User.findOne({ _id: user_id })
 
-    // Build query based on filters
-    const query = {
-      gender: { $eq: gender },
-      age: { $gte: minAge, $lte: maxAge },
-    };
+    // Find users within 1km of user's location
+    const users = await User.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: user.location,
+          },
+          $maxDistance: 1000,
+        },
+      },
+    });
 
-    // Execute query and get matching users
-    const matchingUsers = await User.find(query);
-
-    // Send matching users as response
     res.status(200).json({
       success: true,
-      data: matchingUsers,
+      data: users,
     });
   } catch (error) {
     next(error);
   }
 };
 
+const likeUser = async (req, res, next) => {
+  try { 
+    // Get user's id from request
+    const user_id = req.userId;
+    const likedUser = req.params.user_id;
+    const result = await User.updateOne({ _id: user_id }, { $push: { likedUsers: likedUser } });
+    res.status(200).json({
+      success: true,
+      data: result,
+    }); 
+  } catch (error) {
+    next(error);
+  }
+};
+    
+
 module.exports = {
-  searchUsers,
+  getSuggestedMatches,
+  likeUser,
 };
