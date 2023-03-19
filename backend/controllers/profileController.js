@@ -1,4 +1,4 @@
-const { profileUpload } = require('../middleware/uploadMiddleware');
+const { profileUpload } = require('../middlewares/uploadMiddleware');
 
 module.exports.uploadProfilePicture = (req, res, next) => {
   profileUpload(req, res, (err) => {
