@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  justify-content: center;
+  // margin: 100px 0px;
+  background-image: url('../../../assets/images/cover.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+mat-card {
+  height: 300px;
+  margin: 5%;
+  
+}
+
+mat-form-field {
+  width: 100%;
+  // min-width: 300px;
+}
+
+mat-card-title,
+mat-card-content,
+mat-card-footer {
+  display: flex;
+  justify-content: center;
+}
+
+mat-card-title{
+  padding: 5%;
+
+}
+
+.error {
+  padding: 16px;
+  width: 300px;
+  color: white;
+  background-color: red;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+}
