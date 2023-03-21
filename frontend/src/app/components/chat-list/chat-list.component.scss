@@ -1,0 +1,35 @@
+.chat-list-container {
+    padding: 16px;
+    background-image: url('../../../assets/images/card_background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    }
+    
+    
+    .chat-card {
+    margin-bottom: 16px;
+    }
+    
+    .mat-card-header {
+    display: flex;
+    align-items: center;
+    }
+    
+    .mat-card-title {
+    margin-left: 16px;
+    }
+    
+    .mat-card-subtitle {
+    margin-left: 16px;
+    }
+    
+    .mat-card-content {
+    font-size: 14px;
+    color: #666;
+    }
+    
+    .mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    }
