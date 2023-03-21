@@ -1,0 +1,39 @@
+<mat-toolbar
+  [ngClass]="{ toolbar: onHomePage }"
+  fxLayout="row"
+  fxLayoutAlign="space-between center"
+>
+  <span>
+    <button mat-button routerLink="/">MIU Love</button>
+  </span>
+  <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+    <button mat-button routerLink="">
+      <mat-icon>home</mat-icon>
+      Home
+    </button>
+    <button mat-button routerLink="/dashboard" *ngIf="userLoggedIn">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </button>
+    <button mat-button routerLink="/chats" *ngIf="userLoggedIn">
+      <mat-icon>message</mat-icon>
+      Chats
+    </button>
+    <button mat-button routerLink="/account" *ngIf="userLoggedIn">
+      <mat-icon>person</mat-icon>
+      Profile
+    </button>
+    <button mat-button routerLink="/signup" *ngIf="!userLoggedIn">
+      <mat-icon>account_circle</mat-icon>
+      Signup
+    </button>
+    <button mat-button routerLink="/login" *ngIf="!userLoggedIn">
+      <mat-icon>power_settings_new</mat-icon>
+      Login
+    </button>
+    <button mat-button *ngIf="userLoggedIn" (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      Logout
+    </button>
+  </div>
+</mat-toolbar>
