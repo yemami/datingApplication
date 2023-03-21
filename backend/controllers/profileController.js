@@ -1,25 +1,37 @@
-const { profileUpload } = require('../middlewares/uploadMiddleware');
+const User = require("../models/User");
+const path = require("path");
+const fs = require("fs");
 
-module.exports.uploadProfilePicture = (req, res, next) => {
-  profileUpload(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({
-        success: false,
-        error: err.message,
-      });
+exports.uploadProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.userId });
+    if (!req.file) {
+      return res.status(400).send({ message: "No file uploaded" });
     }
 
-    // Store the path to the uploaded profile picture in the user's profile picture field
-    req.user.profilePicture = `/uploads/profile/${req.file.filename}`;
-    req.user.save();
+    // Check if the file object contains a path property
+    if (!req.file.path) {
+      return res.status(400).send({ message: "Uploaded file has no path" });
+    }
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    res.status(200).json({
-      success: true,
-      data: {
-        message: 'Profile picture uploaded successfully',
-        imageUrl: req.user.profilePicture,
-      },
-    });
-  });
+    if (user.profile.profilePic) {
+      // delete existing profile pic
+      const oldPicPath = path.join(__dirname, user.profile.profilePic);
+      if (fs.existsSync(oldPicPath)) {
+        fs.unlinkSync(oldPicPath);
+      }
+    }
+
+    user.profile.profilePic = req.file.path;
+    await user.save();
+
+    res.json({ message: "Profile pic uploaded successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
-
