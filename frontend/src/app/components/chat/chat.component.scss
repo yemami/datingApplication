@@ -1,0 +1,39 @@
+mat-form-field{
+    width: 90%;
+}
+.chat-container {
+    height: calc(100vh - 157px);
+    overflow-y: scroll;
+    padding: 16px;
+    background-image: url('../../../assets/images/chat.jpg');
+  }
+  
+  .message-item {
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .user-message {
+    background-color: #5e6aab;
+    width: fit-content;
+    text-align: left;
+    justify-content: flex-start;
+    margin-left: auto;
+  }
+  
+  .bot-message {
+    background-color: rgb(191, 199, 202);
+    width: fit-content;
+    text-align: right;
+  }
+
+  .input-container{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: transparent;
+    background-color: rgba(199, 197, 182, 0.8);
+  }
+
+  
