@@ -1,72 +1,64 @@
-const Message = require('../models/Message');
+const Message = require("../models/Message");
 
 // Get all chats for the logged in user
 exports.getAllChats = async (req, res, next) => {
   try {
-    const userId = req.user_id;
-    const chats = await Message.aggregate([ 
-      { $match: { $or: [{ senderId: userId }, { recipientId: userId }] } },
-      { $sort: { timestamp: -1 } }
-    ]);
+    const userId = req.userId;
+    const messages = await Message.find({
+      $or: [{ "sender._id": userId }, { "recipient._id": userId }],
+    }).sort({ timestamp: -1 });
+
+    const transformedMessages = messages.map((message) => {
+      return {
+        id: message._id,
+        recipient: message.recipient.name,
+        recipientId: message.recipient._id,
+        sender: message.sender.name,
+        senderId: message.sender._id,
+        message: message.messages[message.messages.length - 1].text,
+        timestamp: message.timestamp,
+      };
+    });
+
     res.status(200).json({
       success: true,
-      data: chats
+      data: transformedMessages,
     });
   } catch (error) {
     next(error);
   }
 };
 
-
-    
-
-// Get all messages between two users
-exports.getMessages = async (req, res, next) => {
+// Get all messages for a specific chat
+exports.getChatMessages = async (req, res, next) => {
   try {
-    const { userId, recipientId } = req.params;
-
-    const messages = await Message.find({
-      $or: [
-        { senderId: userId, recipientId: recipientId },
-        { senderId: recipientId, recipientId: userId }
-      ]
-    }).sort({ timestamp: 1 }).populate('senderId recipientId', 'name');
-
+    const { chatId } = req.params;
+    const messages = await Message.findOne({
+      _id: chatId,
+    }).sort({ timestamp: -1 });
     res.status(200).json({
       success: true,
-      data: messages
+      data: messages,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    next(error);
   }
 };
 
 // Create a new message
 exports.sendMessage = async (req, res, next) => {
+  //send a message to a specific chat
   try {
-    const { userId, recipientId, message } = req.body;
-
-    const newMessage = new Message({
-      senderId: userId,
-      recipientId,
-      message
-    });
-
-    await newMessage.save();
-
-    res.status(201).json({
+    const { chatId } = req.params;
+    const messages = await Message.updateOne(
+      { _id: chatId },
+      { $push: { messages: { text: req.body.text, sender: req.userId } } }
+    );
+    res.status(200).json({
       success: true,
-      message: 'Message sent successfully'
+      data: messages,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    next(error);
   }
 };
