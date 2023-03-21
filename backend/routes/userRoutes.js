@@ -1,15 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { authMiddleware } = require('../middlewares/authMiddleware');
-const userController = require('../controllers/userController');
+const { authMiddleware } = require("../middlewares/authMiddleware");
+const userController = require("../controllers/userController");
 
-// GET a single user by ID
-router.get('/:id', authMiddleware, userController.getUserById);
+// GET a user details
+router.get("/", authMiddleware, userController.getUserDetails);
 
 // PATCH update current user
-router.patch('/', authMiddleware, userController.updateCurrentUser);
-
-// DELETE current user
-router.delete('/', authMiddleware, userController.deleteCurrentUser);
+router.patch("/", authMiddleware, userController.updateCurrentUser);
 
 module.exports = router;
