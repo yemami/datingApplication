@@ -1,0 +1,68 @@
+<div class="signup-container">
+<mat-card >
+  <mat-card-content>
+    <mat-card-title>Create Account</mat-card-title>
+    <form [formGroup]="signupForm">
+      <p>
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Full Name"
+            formControlName="name"
+          />
+          <mat-error *ngIf="name?.errors">Full Name is required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input matInput placeholder="Email" formControlName="email" />
+          <mat-error *ngIf="email?.errors">Please enter a valid Email</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input matInput [matDatepicker]="datePicker" placeholder="Date of Birth" formControlName="dateOfBirth">
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+          <mat-error *ngIf="dateOfBirth?.errors">Date Of Birth is required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input
+            type="password"
+            matInput
+            placeholder="Password"
+            formControlName="password"
+          />
+          <mat-error *ngIf="password?.errors">Password is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            type="password"
+            matInput
+            placeholder="Confirm Password"
+            formControlName="confirmPassword"
+          />
+          <mat-error *ngIf="confirmPassword?.errors">Confirm Password is required</mat-error>
+        </mat-form-field>
+      </p>
+      <p class="button">
+        <button mat-stroked-button color="primary" (click)="signup()">
+          Signup
+        </button>
+      </p>
+    </form>
+  </mat-card-content>
+</mat-card>
+</div>
